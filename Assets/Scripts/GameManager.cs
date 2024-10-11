@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Tilemap userTilemap;
     public Tile drawedTile;
     public Tile deadTile;
-    private Vector3Int theGridSize = new Vector3Int(100,100,0);
+    private Vector3Int theGridSize = new Vector3Int(3,3,0);
 
     private void Start() {
         //createThegrid();
@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
         return neighAlive;
         Debug.Log("Neighs alive: " + neighAlive);*/
         ///////////////segundaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        /*int neighAlive = 0;
+        int neighAlive = 0;
 
         // Revisa las celdas alrededor de la celda actual
         for (int i = -1; i <= 1; ++i) {
@@ -241,10 +241,10 @@ public class GameManager : MonoBehaviour
             }
         }
         Debug.Log($"Cell ({rows}, {columns}) has {neighAlive} alive neighbors.");
-        return neighAlive;*/
+        return neighAlive;
 
         ////////////////terceraaaaaaaaaaaaaaa
-        int neighAlive = 0;
+        /*int neighAlive = 0;
 
         // Coordenadas relativas de los vecinos (incluye diagonales)
         int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
@@ -262,7 +262,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return neighAlive;
+        return neighAlive;*/
     }
 
     /* Funcion CreateTheGrid
