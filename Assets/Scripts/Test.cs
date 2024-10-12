@@ -5,25 +5,15 @@ using UnityEngine.Tilemaps;
 
 public class Test : MonoBehaviour
 {
+    Cell[,] theGrid;
     public int rows = 100;
     public int columns = 100;
-    private Cell[,] theGrid;
     public Tilemap tilemap;
     public Tilemap userTilemap;
-    public Tile aliveTile;
-    public Tile deadTile;
+    public Tile drawedTile; 
+    public Tile deadTile;   
 
     private void Start() {
-        InitializeGrid();
-    }
-
-    private void Update() {
-        HandleMouseInput();
-        HandleGameOfLifeUpdate();
-    }
-
-    // Initialize the grid with dead cells
-    private void InitializeGrid() {
         theGrid = new Cell[rows, columns];
         for (int i = 0; i < rows; i++) {
             for (int c = 0; c < columns; c++) {
@@ -32,111 +22,78 @@ public class Test : MonoBehaviour
         }
     }
 
-    // Handle mouse clicks for grid interaction
-    private void HandleMouseInput() {
+    private void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int tilePos = tilemap.WorldToCell(mousePos);
-
-            // Debugging: Verificar las coordenadas del mouse
-            Debug.Log($"Mouse Pos: {mousePos}, Tile Pos: {tilePos}");
-
-            if (IsValidPosition(tilePos)) {
-                ToggleCellAtPosition(tilePos);
+            Vector3 coursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int tilePos = userTilemap.WorldToCell(coursorPos);
+            if (tilePos.x >= 0 && tilePos.x < rows && tilePos.y >= 0 && tilePos.y < columns) {
+                updateGrid(tilePos);
             }
         }
-    }
-
-    // Check if a given position is within the grid bounds
-    private bool IsValidPosition(Vector3Int pos) {
-        return pos.x >= 0 && pos.x < rows && pos.y >= 0 && pos.y < columns;
-    }
-
-    // Toggle the state of the cell when clicking
-    private void ToggleCellAtPosition(Vector3Int tilePos) {
-        // Get the current state of the cell
-        bool currentState = theGrid[tilePos.x, tilePos.y].bIsAlive;
-
-        // Toggle the state
-        theGrid[tilePos.x, tilePos.y].bIsAlive = !currentState;
-
-        // Update the tilemap based on the new state
-        if (theGrid[tilePos.x, tilePos.y].bIsAlive) {
-            tilemap.SetTile(tilePos, aliveTile);
-            userTilemap.SetTile(tilePos, aliveTile);
-        } else {
-            tilemap.SetTile(tilePos, null);
-            userTilemap.SetTile(tilePos, null);
-        }
-
-        // Debugging: Informar el nuevo estado
-        Debug.Log($"Cell at {tilePos.x}, {tilePos.y} is now {(theGrid[tilePos.x, tilePos.y].bIsAlive ? "alive" : "dead")}");
-    }
-
-    // Game of Life update on spacebar press
-    private void HandleGameOfLifeUpdate() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Cell[,] newGrid = new Cell[rows, columns];
+            runGameOfLife();
+        }
+    }
 
-            // Initialize the new grid
-            for (int i = 0; i < rows; i++) {
-                for (int c = 0; c < columns; c++) {
-                    newGrid[i, c] = new Cell(false);
+    public void runGameOfLife() {
+        Cell[,] tempGrid = new Cell[rows, columns];
+
+        for(int i = 0; i < rows; i++) {
+            for(int c = 0; c < columns; c++) {
+                int currentNeighs = checkNeighCells(i, c);
+                if(theGrid[i, c].bIsAlive) {
+                    tempGrid[i, c] = new Cell(currentNeighs == 2 || currentNeighs == 3);
+                } else {
+                    tempGrid[i, c] = new Cell(currentNeighs == 3);
                 }
             }
+        }
 
-            // Apply Game of Life rules
-            for (int i = 0; i < rows; i++) {
-                for (int c = 0; c < columns; c++) {
-                    int aliveNeighbors = CountAliveNeighbors(i, c);
-                    newGrid[i, c].bIsAlive = ApplyGameOfLifeRules(theGrid[i, c].bIsAlive, aliveNeighbors);
-                }
-            }
+        theGrid = tempGrid;
+        updateVisualGrid();
+    }
 
-            // Swap the new grid to the current grid
-            theGrid = newGrid;
-            UpdateVisualGrid();
+    private void updateGrid(Vector3Int tilePos) {
+        TileBase currentTile = tilemap.GetTile(tilePos);
+        if (currentTile == null) {        
+            tilemap.SetTile(tilePos, drawedTile);
+            userTilemap.SetTile(tilePos, drawedTile);
+            theGrid[tilePos.x, tilePos.y].bIsAlive = true;
+        } else {       
+            tilemap.SetTile(tilePos, deadTile);
+            userTilemap.SetTile(tilePos, deadTile);
+            theGrid[tilePos.x, tilePos.y].bIsAlive = false;
         }
     }
 
-    // Count the alive neighbors around a cell
-    private int CountAliveNeighbors(int x, int y) {
-        int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
-        int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
-        int aliveCount = 0;
-
-        for (int i = 0; i < 8; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
-
-            if (nx >= 0 && nx < rows && ny >= 0 && ny < columns && theGrid[nx, ny].bIsAlive) {
-                aliveCount++;
-            }
-        }
-
-        return aliveCount;
-    }
-
-    // Apply the Game of Life rules to a cell
-    private bool ApplyGameOfLifeRules(bool isAlive, int aliveNeighbors) {
-        if (isAlive) {
-            return aliveNeighbors == 2 || aliveNeighbors == 3;
-        } else {
-            return aliveNeighbors == 3;
-        }
-    }
-
-    // Update the visual representation of the grid
-    private void UpdateVisualGrid() {
+    private void updateVisualGrid() {
         for (int i = 0; i < rows; i++) {
             for (int c = 0; c < columns; c++) {
-                Vector3Int cellPos = new Vector3Int(i, c, 0);
+                Vector3Int currentGridPos = new Vector3Int(i, c, 0);
                 if (theGrid[i, c].bIsAlive) {
-                    tilemap.SetTile(cellPos, aliveTile);
+                    tilemap.SetTile(currentGridPos, drawedTile);
                 } else {
-                    tilemap.SetTile(cellPos, null);
+                    tilemap.SetTile(currentGridPos, deadTile);
                 }
             }
         }
+    }
+
+    int checkNeighCells(int x, int y) {
+        int aliveNeighbors = 0;
+        for(int i = -1; i <= 1; i++) {
+            for(int j = -1; j <= 1; j++) {
+                if(i == 0 && j == 0) continue;
+                int checkX = x + i;
+                int checkY = y + j;
+
+                if(checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns) {
+                    if (theGrid[checkX, checkY].bIsAlive) {
+                        aliveNeighbors++;
+                    }
+                }
+            }
+        }
+        return aliveNeighbors;
     }
 }

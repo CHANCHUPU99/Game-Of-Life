@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Tilemap userTilemap;
     public Tile drawedTile;
     public Tile deadTile;
-    private Vector3Int theGridSize = new Vector3Int(3,3,0);
+    private Vector3Int theGridSize = new Vector3Int(50,50,0);
 
     private void Start() {
         //createThegrid();
@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
                     if (theGrid[neighPosX, neighPosY].bIsAlive) {
                         neighAlive++;
                     }
-                    // Agrega información de depuración sobre las celdas vecinas
+                   
                     Debug.Log($"Checking neighbor at ({neighPosX}, {neighPosY}): {theGrid[neighPosX, neighPosY].bIsAlive}");
                 }
             }

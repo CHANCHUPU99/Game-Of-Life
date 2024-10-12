@@ -489,8 +489,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 26, y: -510}
-  m_SizeDelta: {x: -1104.37, y: -1008.381}
+  m_AnchoredPosition: {x: 731.94464, y: -455}
+  m_SizeDelta: {x: -1466.0623, y: -1008.381}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &869413919
 MonoBehaviour:
@@ -725,7 +725,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1404310233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,7 +895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1777797485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,8 +912,8 @@ MonoBehaviour:
   columns: 100
   tilemap: {fileID: 907223723}
   userTilemap: {fileID: 1775822016}
-  aliveTile: {fileID: 11400000, guid: e478002148e14684cae5aa68e0b63cd1, type: 2}
-  deadTile: {fileID: 0}
+  drawedTile: {fileID: 11400000, guid: e478002148e14684cae5aa68e0b63cd1, type: 2}
+  deadTile: {fileID: 11400000, guid: 3699a0f3328abbb418ba3903b198ee4b, type: 2}
 --- !u!4 &1777797486
 Transform:
   m_ObjectHideFlags: 0
