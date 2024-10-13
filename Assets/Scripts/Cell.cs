@@ -12,9 +12,7 @@ public class Cell {
     public void Morir() {
         bIsAlive = false;
     }*/
-
     public bool bIsAlive;
-
    
     public Cell() {
         bIsAlive = false; 

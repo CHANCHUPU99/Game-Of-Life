@@ -39,29 +39,26 @@ public class GameManager : MonoBehaviour
     }
 
     public void runGameOfLife() {
-        /*if(Input.GetKeyDown(KeyCode.Space)) {
+        if(Input.GetKeyDown(KeyCode.Space)) {
             createThegrid();
             Cell[,] tempGrid = new Cell[rows, columns];
-            for (int i = 0; i < rows; i++) {
-                for (int c = 0; c < columns; c++) {
+            for(int i = 0; i < rows; i++) {
+                for(int c = 0; c < columns; c++) {
                     tempGrid[i, c] = new Cell(false); 
                 }
             }
-
-
-            for (int i = 0; i < rows; i++) {
+            for(int i = 0; i < rows; i++) {
                 for(int c = 0; c < columns; c++) {
                     int currentNeighs = checkNeighCells(i,c);
                     //tempGrid[i,c] = new Cell(theGrid[i,c].bIsAlive);             
-                    //Debug.LogError($"Cell ({i}, {c}) has {currentNeighs} alive neighbors.");
-                    if (theGrid[i,c].bIsAlive) {
+                    if(theGrid[i,c].bIsAlive) {
                         if(currentNeighs < 2 || currentNeighs >= 4) {
                             theGrid[i,c].bIsAlive = false;
                         } else {
                             theGrid[i,c].bIsAlive = true;
                         }
                     } else {
-                        if (currentNeighs == 3) {
+                        if(currentNeighs == 3) {
                             tempGrid[i, c].bIsAlive = true; 
                         } else {
                             tempGrid[i, c].bIsAlive = false; 
@@ -75,65 +72,23 @@ public class GameManager : MonoBehaviour
             printGridState();
             updateVisualGrid();
             Debug.LogWarning("el juego acabaria aqui........");
-        }*/
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            createThegrid();
-            Cell[,] tempGrid = new Cell[rows, columns];
-            for (int i = 0; i < rows; i++) {
-                for (int c = 0; c < columns; c++) {
-                    tempGrid[i, c] = new Cell(false); 
-                }
-            }
-
-            for (int i = 0; i < rows; i++) {
-                for (int c = 0; c < columns; c++) {
-                    int currentNeighs = checkNeighCells(i, c);
-                    if (theGrid[i, c].bIsAlive) {
-                        tempGrid[i, c].bIsAlive = currentNeighs == 2 || currentNeighs == 3;
-                    } else {
-                        tempGrid[i, c].bIsAlive = currentNeighs == 3;
-                    }
-                }
-            }
-
-            theGrid = tempGrid; 
-            printGridState();
-            updateVisualGrid();
-            Debug.LogWarning("El juego acabó aquí.");
         }
     }
 
     
     private void updateGrid(Vector3Int tilePos) {
-        /*TileBase currentTilemap = tilemap.GetTile(tilePos);
+        TileBase currentTilemap = tilemap.GetTile(tilePos);
         if(currentTilemap == null) {
             tilemap.SetTile(tilePos, drawedTile);
             userTilemap.SetTile(tilePos, drawedTile);
             theGrid[tilePos.x, tilePos.y].bIsAlive = true;
-            Debug.Log($"Pintada celda en {tilePos.x}, {tilePos.y} como viva.");
+            Debug.Log("viveeeeeee");
         } else {
             tilemap.SetTile(tilePos, null);
             userTilemap.SetTile(tilePos, null);
             theGrid[tilePos.x, tilePos.y].bIsAlive = false;
-            Debug.Log($"Celda en {tilePos.x}, {tilePos.y} se eliminó.");
-        }*/
-        if (tilePos.x >= 0 && tilePos.x < rows && tilePos.y >= 0 && tilePos.y < columns) {
-            TileBase currentTile = tilemap.GetTile(tilePos);
-            if (currentTile == null) {
-                tilemap.SetTile(tilePos, drawedTile);
-                userTilemap.SetTile(tilePos, drawedTile);
-                theGrid[tilePos.x, tilePos.y].bIsAlive = true;
-                Debug.Log($"Celda en {tilePos.x}, {tilePos.y} pintada como viva. Estado actual: {theGrid[tilePos.x, tilePos.y].bIsAlive}");
-            } else {
-                tilemap.SetTile(tilePos, null);
-                userTilemap.SetTile(tilePos, null);
-                theGrid[tilePos.x, tilePos.y].bIsAlive = false;
-                Debug.Log($"Celda en {tilePos.x}, {tilePos.y} eliminada. Estado actual: {theGrid[tilePos.x, tilePos.y].bIsAlive}");
-            }
-        } else {
-            Debug.LogWarning($"Tile position {tilePos} is out of bounds.");
-        }
-
+            Debug.Log("MUEREEEEEE");
+        } 
     }
 
     //Function to Update the grid of the game
@@ -142,7 +97,7 @@ public class GameManager : MonoBehaviour
             for(int c = 0; c < columns; c++) {
                 Vector3Int currentGridPos = new Vector3Int(i, c);
                 if (theGrid[i,c].bIsAlive) {
-                    Debug.Log($"Drawing live cell at ({i}, {c})");
+                    Debug.Log("deberia ser 1");
                     tilemap.SetTile(currentGridPos, drawedTile);
                 } else {
                     tilemap.SetTile(currentGridPos, null);
@@ -152,7 +107,7 @@ public class GameManager : MonoBehaviour
     }
 
     void createThegrid() {
-        /*theGrid = new Cell[rows, columns];
+        theGrid = new Cell[rows, columns];
         for(int i = 0; i < rows; i++) {
             for(int c = 0 ; c < columns; c++) {
                 theGrid[i, c] = new Cell(false);
@@ -160,23 +115,10 @@ public class GameManager : MonoBehaviour
                 TileBase currentTile = tilemap.GetTile(currentGridPos);
                 if(currentTile != null) {
                     theGrid[i,c].bIsAlive = true;
-                    Debug.Log($"Cell at {i}, {c} initialized as alive.");
+                    Debug.Log("se creo alive");
                 } else { 
                     theGrid[i, c].bIsAlive = false;
-                    Debug.Log($"Cell at {i}, {c} initialized as dead.");
-                }
-            }
-        }*/
-        for (int i = 0; i < rows; i++) {
-            for (int c = 0; c < columns; c++) {
-                Vector3Int currentGridPos = new Vector3Int(i, c, 0);
-                TileBase currentTile = tilemap.GetTile(currentGridPos);
-                if (currentTile != null) {
-                    theGrid[i, c] = new Cell(true);
-                    Debug.Log($"Cell at {i}, {c} initialized as alive.");
-                } else {
-                    theGrid[i, c] = new Cell(false);
-                    Debug.Log($"Cell at {i}, {c} initialized as dead.");
+                    Debug.Log("se creo dead");
                 }
             }
         }
@@ -189,14 +131,6 @@ public class GameManager : MonoBehaviour
             }
             gridState += "\n";
         }
-        Debug.Log($"Estado actual de theGrid:\n{gridState}");
-    }
-
-    void paintCell(int x, int y) {
-        
-        theGrid[x, y].bIsAlive = true;
-        Debug.Log($"Cell ({x}, {y}) marked as alive");
-        updateVisualGrid();
     }
     int checkNeighCells(int rows, int columns) {
         /*int neighAlive = 0;
@@ -206,7 +140,7 @@ public class GameManager : MonoBehaviour
                     continue;
                 } 
                 int neighPosX = rows + i;
-                int neighPosY = columns + c;
+                nt neighPosY = columns + c;
                 if(neighPosX >= 0 && neighPosX < rows && neighPosY >= 0 &&  neighPosY < columns) {
                     if (theGrid[neighPosX,neighPosY].bIsAlive) {
                         neighAlive++;
@@ -219,50 +153,24 @@ public class GameManager : MonoBehaviour
         Debug.Log("Neighs alive: " + neighAlive);*/
         ///////////////segundaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         int neighAlive = 0;
-
-        // Revisa las celdas alrededor de la celda actual
         for (int i = -1; i <= 1; ++i) {
             for (int j = -1; j <= 1; ++j) {
                 if (i == 0 && j == 0) {
-                    continue; // No revises la celda actual
+                    continue; 
                 }
-
                 int neighPosX = rows + i;
-                int neighPosY = columns + j;
-
-                // Comprueba que los índices estén dentro de los límites
+                int neighPosY = columns + j;           
                 if (neighPosX >= 0 && neighPosX < rows && neighPosY >= 0 && neighPosY < columns) {
                     if (theGrid[neighPosX, neighPosY].bIsAlive) {
                         neighAlive++;
                     }
                    
-                    Debug.Log($"Checking neighbor at ({neighPosX}, {neighPosY}): {theGrid[neighPosX, neighPosY].bIsAlive}");
+
                 }
             }
         }
-        Debug.Log($"Cell ({rows}, {columns}) has {neighAlive} alive neighbors.");
         return neighAlive;
 
-        ////////////////terceraaaaaaaaaaaaaaa
-        /*int neighAlive = 0;
-
-        // Coordenadas relativas de los vecinos (incluye diagonales)
-        int[] dx = { -1, -1, -1, 0, 0, 1, 1, 1 };
-        int[] dy = { -1, 0, 1, -1, 1, -1, 0, 1 };
-
-        for (int i = 0; i < 8; i++) {
-            int newRow = rows + dx[i];
-            int newCol = columns + dy[i];
-
-            // Verificar límites de la matriz
-            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < columns) {
-                if (theGrid[newRow, newCol].bIsAlive) {
-                    neighAlive++;
-                }
-            }
-        }
-
-        return neighAlive;*/
     }
 
     /* Funcion CreateTheGrid

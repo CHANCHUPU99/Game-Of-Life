@@ -35,14 +35,12 @@ public class RulesOfThegame : MonoBehaviour
                 int vecinosVivos = ContarVecinosVivos(i, j);
 
                 if (grid[i, j].bIsAlive) {
-                    // Si está viva, aplica las reglas de sobrepoblación y subpoblación
                     if (vecinosVivos < 2 || vecinosVivos > 3) {
                         nuevoGrid[i, j] = new Cell(false);
                     } else {
                         nuevoGrid[i, j] = new Cell(true);
                     }
                 } else {
-                    // Si está muerta, verifica si debe revivir
                     if (vecinosVivos == 3) {
                         nuevoGrid[i, j] = new Cell(true);
                     } else {
@@ -78,15 +76,4 @@ public class RulesOfThegame : MonoBehaviour
         return vecinosVivos;
     }
 
-    /*public void UpdateGrid(Vector3Int posicion, bool estaViva) {
-        // Actualiza la lógica interna
-        UpdateCelula(posicion.x, posicion.y, estaViva);
-
-        // Actualiza la visualización
-        if (estaViva) {
-            userTilemap.SetTile(posicion, tileVivo);  // Coloca el tile de célula viva
-        } else {
-            userTilemap.SetTile(posicion, null);  // Elimina el tile
-        }
-    }*/
 }

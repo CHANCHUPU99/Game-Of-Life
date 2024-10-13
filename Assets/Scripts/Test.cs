@@ -9,14 +9,16 @@ public class Test : MonoBehaviour
     public Tilemap tilemap;
     public Tilemap userTilemap;
     public Tile drawedTile; 
-    public Tile deadTile;   
     public int rows = 350;
     public int columns = 350;
+    private bool simulationIsRunning;
+    public Tile deadTile;   
+    
 
     private void Start() {
         theGrid = new Cell[rows, columns];
-        for (int i = 0; i < rows; i++) {
-            for (int c = 0; c < columns; c++) {
+        for(int i = 0;i < rows; i++) {
+            for(int c = 0; c < columns; c++) {
                 theGrid[i, c] = new Cell(false);
             }
         }
@@ -30,30 +32,30 @@ public class Test : MonoBehaviour
                 updateGrid(tilePos);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (simulationIsRunning) {
             runGameOfLife();
         }
     }
 
     public void runGameOfLife() {
         Cell[,] tempGrid = new Cell[rows, columns];
-        for (int i = 0; i < rows; i++) {
-            for (int c = 0; c < columns; c++) {
+        for(int i = 0;i < rows; i++) {
+            for(int c = 0;c < columns; c++) {
                 tempGrid[i, c] = new Cell();
             }
         }
-        for (int i = 0; i < rows; i++) {
-            for (int c = 0; c < columns; c++) {
+        for(int i = 0; i < rows; i++) {
+            for(int c = 0;c < columns; c++) {
                 int currentNeighs = checkNeighCells(i, c);
-                if (theGrid[i, c].bIsAlive) {
-                    if (currentNeighs < 2 || currentNeighs > 3) {
+                if(theGrid[i, c].bIsAlive) {
+                    if(currentNeighs < 2 || currentNeighs > 3) {
                         tempGrid[i, c].bIsAlive = false;
                     } else {
                         tempGrid[i, c].bIsAlive = true;
                     }
                 }
                 else {
-                    if (currentNeighs == 3) {
+                    if(currentNeighs == 3) {
                         tempGrid[i, c].bIsAlive = true;
                     } else {
                         tempGrid[i, c].bIsAlive = false;
@@ -68,32 +70,38 @@ public class Test : MonoBehaviour
 
     private void updateGrid(Vector3Int tilePos) {
         TileBase currentTile = tilemap.GetTile(tilePos);
-        if (currentTile == null) {        
+        if(currentTile == null) {        
             tilemap.SetTile(tilePos, drawedTile);
             userTilemap.SetTile(tilePos, drawedTile);
             theGrid[tilePos.x, tilePos.y].bIsAlive = true;
         } else {       
-            tilemap.SetTile(tilePos, deadTile);
-            userTilemap.SetTile(tilePos, deadTile);
-            theGrid[tilePos.x, tilePos.y].bIsAlive = false;
+            //tilemap.SetTile(tilePos, deadTile);
+            //userTilemap.SetTile(tilePos, deadTile);
+            //theGrid[tilePos.x, tilePos.y].bIsAlive = false;
+            tilemap.SetTile(tilePos, null);
+            userTilemap.SetTile(tilePos, null);
+            theGrid[tilePos.x,tilePos.y].bIsAlive = false;
         }
     }
 
+    //users grid
     private void updateVisualGrid() {
-        for (int i = 0; i < rows; i++) {
-            for (int c = 0; c < columns; c++) {
-                Vector3Int currentGridPos = new Vector3Int(c, i);
-                if (theGrid[i, c].bIsAlive) {
+        for(int i = 0;i < rows; i++) {
+            for(int c = 0;c < columns; c++) {
+                Vector3Int currentGridPos = new Vector3Int(i, c);
+                if(theGrid[i, c].bIsAlive) {
                     tilemap.SetTile(currentGridPos, drawedTile);
+                    userTilemap.SetTile(currentGridPos, drawedTile);
                 } else {
-                    tilemap.SetTile(currentGridPos, deadTile);
+                    tilemap.SetTile(currentGridPos, null);
+                    userTilemap.SetTile(currentGridPos, null);
                 }
             }
         }
     }
-
+    //claseeeeeeee
     int checkNeighCells(int x, int y) {
-        int aliveNeighbors = 0;
+        int aliveNeighs = 0;
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
                 if(i == 0 && j == 0) {
@@ -101,22 +109,37 @@ public class Test : MonoBehaviour
                 }
                 int checkX = x + i;
                 int checkY = y + j;
-
                 if(checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns) {
                     if (theGrid[checkX, checkY].bIsAlive) {
-                        aliveNeighbors++;
+                        aliveNeighs++;
                     }
-                    //Debug.Log($"Checking neighbor at ({checkX}, {checkY}): {theGrid[checkX, checkY].bIsAlive}");
+  
                 }
             }
         }
-        return aliveNeighbors;
+        return aliveNeighs;
+    }
+
+    IEnumerator generationsInterval() {
+        while(simulationIsRunning) {
+            runGameOfLife();
+            yield return new WaitForSeconds(2f);
+        }
+    }
+    public void startGameOfLife() {
+        simulationIsRunning = true;
+        StartCoroutine(generationsInterval());
+        
+    }
+
+    public void stopGameOfLife() {
+        simulationIsRunning= false;
     }
 
     void printGridState() {
         string gridState = "";
-        for (int i = 0; i < rows; i++) {
-            for (int c = 0; c < columns; c++) {
+        for(int i = 0;i < rows; i++) {
+            for(int c = 0; c < columns; c++) {
                 gridState += theGrid[i, c].bIsAlive ? "1 " : "0 ";
             }
             gridState += "\n";
