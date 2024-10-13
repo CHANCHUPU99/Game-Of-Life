@@ -99,6 +99,18 @@ public class Test : MonoBehaviour
             }
         }
     }
+
+    //Funtion to delete theGrid
+    public void clearTheGrid() {
+        for(int i = 0;i < rows;i++) {
+            for(int c =0;c < columns;c++) {
+                Vector3Int currentGridPos = new Vector3Int(i, c);
+                tilemap.SetTile(currentGridPos, null);
+                userTilemap.SetTile(currentGridPos,null);
+            }
+        }
+    }
+
     //claseeeeeeee
     int checkNeighCells(int x, int y) {
         int aliveNeighs = 0;
@@ -126,6 +138,8 @@ public class Test : MonoBehaviour
             yield return new WaitForSeconds(2f);
         }
     }
+
+    //buttons functions
     public void startGameOfLife() {
         simulationIsRunning = true;
         StartCoroutine(generationsInterval());
