@@ -137,7 +137,7 @@ public class Test : MonoBehaviour
             runGameOfLife();
             yield return new WaitForSeconds(2f);
         }
-    }
+    } 
 
     //buttons functions
     public void startGameOfLife() {
