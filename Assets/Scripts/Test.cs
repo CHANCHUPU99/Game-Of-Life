@@ -33,7 +33,8 @@ public class Test : MonoBehaviour
             }
         }
         if (simulationIsRunning) {
-            runGameOfLife();
+            StartCoroutine(generationsInterval());
+            //runGameOfLife();
         }
     }
 
@@ -64,7 +65,7 @@ public class Test : MonoBehaviour
             }
         }
         theGrid = tempGrid;
-        printGridState();
+        //printGridState();
         updateVisualGrid();
     }
 
@@ -105,8 +106,15 @@ public class Test : MonoBehaviour
         for(int i = 0;i < rows;i++) {
             for(int c =0;c < columns;c++) {
                 Vector3Int currentGridPos = new Vector3Int(i, c);
-                tilemap.SetTile(currentGridPos, null);
-                userTilemap.SetTile(currentGridPos,null);
+                if (theGrid[i, c].bIsAlive) {
+                    theGrid[i, c].bIsAlive = false;
+                    tilemap.SetTile(currentGridPos, null);
+                    userTilemap.SetTile(currentGridPos,null);
+                } else {
+                    theGrid[i, c].bIsAlive = false;
+                    tilemap.SetTile(currentGridPos, null);
+                    userTilemap.SetTile(currentGridPos, null);
+                }
             }
         }
     }
@@ -134,8 +142,9 @@ public class Test : MonoBehaviour
 
     IEnumerator generationsInterval() {
         while(simulationIsRunning) {
+            yield return new WaitForSeconds(0.3f);
             runGameOfLife();
-            yield return new WaitForSeconds(2f);
+            //updateVisualGrid();
         }
     } 
 
@@ -150,6 +159,7 @@ public class Test : MonoBehaviour
         simulationIsRunning= false;
     }
 
+    //function to print 
     void printGridState() {
         string gridState = "";
         for(int i = 0;i < rows; i++) {
